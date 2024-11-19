@@ -1,9 +1,9 @@
 import { EQUIPMNET_MOCK } from "./mock"
 
 export interface Equipment {
-    image: string
+    image: string | null
     name: string
-    description: string
+    description: string | null
     price: number
     id: number
 }
@@ -14,12 +14,6 @@ export interface EquipmentResult {
     equipment: Equipment[]
 }
 
-export const getEquipment = async (): Promise<EquipmentResult> =>{
-  return fetch(`http://localhost:3000/api/equipment/`, {
-  })
-      .then((response) => response.json())
-}
-
 export const getEquipmentByPrice = async (price = ''): Promise<EquipmentResult> =>{
     return fetch(`http://localhost:3000/api/equipment/?price=${price}`)
         .then((response) => response.json())
@@ -27,9 +21,9 @@ export const getEquipmentByPrice = async (price = ''): Promise<EquipmentResult> 
 }
 
 export const getEquipmentById = async (
-  id: number | string
-): Promise<EquipmentResult> => {
-  return fetch(`http://localhost:3000/api/equipment/${id}/`).then(
-    (response) => response.json()
-  )
+  id: number
+): Promise<Equipment> => {
+  return fetch(`http://localhost:3000/api/equipment/${id}/`)
+  .then((response) => response.json())
+  .catch(()=> (EQUIPMNET_MOCK.equipment[id]))
 };

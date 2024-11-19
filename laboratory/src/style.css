@@ -4,6 +4,8 @@
 
 .navbar {
     background-image:url(https://loip.ru/bitrix/templates/main/img/header.jpg);
+    background-size: cover;
+
 }
 
 .btn {
@@ -39,4 +41,8 @@ a {
 * {
 --bs-btn-bg: #0072BC;
 --bs-btn-hover-bg: #0f466b;
+}
+
+img {
+    max-width: 100%;
 }

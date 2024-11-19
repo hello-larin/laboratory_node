@@ -11,13 +11,13 @@ import { EQUIPMNET_MOCK } from "../modules/mock";
 
 
 export const EquipmentPage: FC = () => {
-  const [pageData, setPageData] = useState<Equipment>();
+  const [pageData, setPageData] = useState<Equipment | undefined>(undefined);
 
   const { id } = useParams(); // ид страницы, пример: "/albums/12"
 
   useEffect(() => {
     if (!id) return;
-    getEquipmentById(id)
+    getEquipmentById(parseInt(id))
       .then((response) => setPageData(response))
       .catch(
         () =>

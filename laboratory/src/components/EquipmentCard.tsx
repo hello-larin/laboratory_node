@@ -1,24 +1,21 @@
 import { FC } from 'react'
-import { Button, Card } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import './../style.css'
 import default_image from "../1.png";
 
 interface Props {
-    image: string
+    image: string | null
     name: string
     price: number
     id: number
     imageClickHandler: () => void;
-    addToProcurement: () => void;
 }
 
 export const EquipmentCard: FC<Props> = ({
-    id,
     name,
     price,
     image,
     imageClickHandler,
-    addToProcurement
   }) => {
   
     return (

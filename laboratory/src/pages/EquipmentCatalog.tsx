@@ -1,32 +1,41 @@
 import "../style.css";
 import { FC, useState, useEffect } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import { Equipment, EquipmentResult, getEquipmentByPrice, getEquipment } from "../modules/EquipmentApi";
+import { Equipment, getEquipmentByPrice } from "../modules/EquipmentApi";
+import ProcurementButton from "../components/ProcurementButton";
 import InputField from "../components/InputField";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { EquipmentCard } from "../components/EquipmentCard";
 import LabNavigation from "../components/LabNav";
 import { useNavigate } from "react-router-dom";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import { EQUIPMNET_MOCK } from "../modules/mock";
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
 
 const EquipmentCatalog: FC = () => {
-    const [searchValue, setSearchValue] = useState('')
+    //const [searchValue, setSearchValue] = useState('')
     const [loading, setLoading] = useState(false)
-    const [catalog, setCatalog] = useState<EquipmentResult>()
-    const [[procurement_id, procurement_count], setProcurement] = useState([-1, 0])
+    //const [catalog, setCatalog] = useState<EquipmentResult>()
+
+    const dispatch = useDispatch();
+    const searchValue = useSelector((state: any) => state.search.searchValue);
+    const catalog = useSelector((state: any) => state.search.catalog);
+
+    const [activeSearchValue, setSearch] = useState(searchValue)
 
     const navigate = useNavigate();
 
     const handleSearch = async () => {
+        dispatch(setSearchValue(activeSearchValue))
         setLoading(true)
-        getEquipmentByPrice(searchValue)
-        .then((response) => setCatalog(response))
-        .catch(() => { // В случае ошибки используем mock данные, фильтруем по имени
-            setCatalog(
-                EQUIPMNET_MOCK
-            )})
-        setLoading(false)
+            getEquipmentByPrice(searchValue)
+            .then((response) => dispatch(setCatalog(response)))
+            setLoading(false)
+        //setLoading(true)
+        //getEquipmentByPrice(searchValue)
+        //.then((response) => setCatalog(response))
+        //setLoading(false)
     };
 
     const handleCardClick = (id: number) => {
@@ -34,30 +43,22 @@ const EquipmentCatalog: FC = () => {
         navigate(`${ROUTES.EQUIPMENT}/${id}`);
     };
 
-    const handleAddToProcurement = async (id: number) => {
-        await addToProcurement(id);
-        await handleSearch();
-    }
-
     useEffect(() => {
         setLoading(true)
         getEquipmentByPrice(searchValue)
-        .then((response) => setCatalog(response))
-        .catch(() => { // В случае ошибки используем mock данные, фильтруем по имени
-            setCatalog(
-                EQUIPMNET_MOCK
-            )})
+        .then((response) => dispatch(setCatalog(response)))
         setLoading(false)
     }, [])
 
     return (
         <Container>
             <LabNavigation company_name="ООО ЛабОборудование"/>
+            <ProcurementButton amount={6}/>
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.EQUIPMENT }]} />
 
             <InputField
-                value={searchValue}
-                setValue={(value) => setSearchValue(value)}
+                value={activeSearchValue}
+                setValue={(value) => setSearch(value)}
                 loading={loading}
                 onSubmit={handleSearch}
             />
@@ -73,12 +74,11 @@ const EquipmentCatalog: FC = () => {
                         <h1>К сожалению, пока ничего не найдено :(</h1>
                     </div>
                 ) : (
-                    <Row xs={4} md={4} className="g-4">
-                        {catalog.equipment.map((item, index) => (
+                    <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+                        {catalog?.equipment.map((item: Equipment, index: number) => (
                             <Col key={index}>
                                 <EquipmentCard
                                     imageClickHandler={() => handleCardClick(item.id)}
-                                    addToProcurement={() => handleAddToProcurement(item.id)}
                                     {...item}
                                 />
                             </Col>
