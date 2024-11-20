@@ -8,7 +8,7 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/node_rip/image/icon.jpg",
+      "src": "/node_rip/images/icon.jpg",
       "type": "image/jpg", "sizes": "512x512"
     }
   ]
