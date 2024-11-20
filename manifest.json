@@ -9,7 +9,7 @@
   "icons": [
     {
       "src": "/node_rip/image/icon.jpg",
-      "type": "image/jpg"
+      "type": "image/jpg", "sizes": "512x512"
     }
   ]
 }
