@@ -22,12 +22,9 @@ const EquipmentCatalog: FC = () => {
     const searchValue = useSelector((state: any) => state.search.searchValue);
     const catalog = useSelector((state: any) => state.search.catalog);
 
-    const [activeSearchValue, setSearch] = useState(searchValue)
-
     const navigate = useNavigate();
 
     const handleSearch = async () => {
-        dispatch(setSearchValue(activeSearchValue))
         setLoading(true)
             getEquipmentByPrice(searchValue)
             .then((response) => dispatch(setCatalog(response)))
@@ -57,8 +54,8 @@ const EquipmentCatalog: FC = () => {
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.EQUIPMENT }]} />
 
             <InputField
-                value={activeSearchValue}
-                setValue={(value) => setSearch(value)}
+                value={searchValue}
+                setValue={(value) => dispatch(setSearchValue(value))}
                 loading={loading}
                 onSubmit={handleSearch}
             />
