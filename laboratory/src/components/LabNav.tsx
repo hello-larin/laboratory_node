@@ -11,7 +11,7 @@ interface Props {
 const LabNavigation: FC<Props> = ({ company_name }) => (
   <Navbar key="md" expand="md" className='myheader bg-body-tertiary mb-3'>
     <Container>
-      <Navbar.Brand href="/">{company_name}</Navbar.Brand>
+      <Navbar.Brand><Link to={ROUTES.HOME || ""}>{company_name}</Link></Navbar.Brand>
       <Navbar.Toggle aria-controls="navbarScroll" />
       <Navbar.Collapse id="navbarScroll">
       <Nav className="justify-content-end">
