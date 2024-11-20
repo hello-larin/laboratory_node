@@ -13,3 +13,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </Provider>
  ,
 )
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register("/node_rip/serviceWorker.js")
+      .then(() => console.log('Service worker registered'))
+      .catch((err) => console.log('Service worker not registered', err));
+  });
+}

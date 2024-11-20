@@ -1,0 +1,15 @@
+{
+  "name": "Laboratory Equipment",
+  "short_name": "Lab Equipment",
+  "start_url": "/node_rip/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#db4938",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/node_rip/images/icon.png",
+      "type": "image/png", "sizes": "512x512"
+    }
+  ]
+}
