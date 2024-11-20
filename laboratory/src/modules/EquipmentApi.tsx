@@ -25,5 +25,7 @@ export const getEquipmentById = async (
 ): Promise<Equipment> => {
   return fetch(`http://localhost:3000/api/equipment/${id}/`)
   .then((response) => response.json())
-  .catch(()=> (EQUIPMNET_MOCK.equipment[id]))
+  .catch(() => (EQUIPMNET_MOCK.equipment.find(
+    (eq) => eq.id === id
+  )))
 };
