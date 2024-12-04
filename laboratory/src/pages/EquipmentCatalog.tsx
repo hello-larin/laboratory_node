@@ -1,7 +1,6 @@
 import "../style.css";
 import { FC, useState, useEffect } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import { Equipment, getEquipmentByPrice } from "../modules/EquipmentApi";
 import ProcurementButton from "../components/ProcurementButton";
 import InputField from "../components/InputField";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
@@ -9,9 +8,10 @@ import { EquipmentCard } from "../components/EquipmentCard";
 import LabNavigation from "../components/LabNav";
 import { useNavigate } from "react-router-dom";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-
+import { Equipment } from "../api/Api";
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
+import { api } from "../api";
 
 const EquipmentCatalog: FC = () => {
     //const [searchValue, setSearchValue] = useState('')
@@ -22,13 +22,16 @@ const EquipmentCatalog: FC = () => {
     const searchValue = useSelector((state: any) => state.search.searchValue);
     const catalog = useSelector((state: any) => state.search.catalog);
 
+    const user = useSelector((state: any) => state.auth);
+
     const navigate = useNavigate();
 
     const handleSearch = async () => {
         setLoading(true)
-            getEquipmentByPrice(searchValue)
-            .then((response) => dispatch(setCatalog(response)))
-            setLoading(false)
+            const { request } = await api.equipment.equipmentList();
+            if (request.status == 200)
+                dispatch(setCatalog(request.response.equipment))
+        setLoading(false)
         //setLoading(true)
         //getEquipmentByPrice(searchValue)
         //.then((response) => setCatalog(response))
@@ -40,17 +43,43 @@ const EquipmentCatalog: FC = () => {
         navigate(`${ROUTES.EQUIPMENT}/${id}`);
     };
 
+    const addToCart = async (id: number) => {
+            setLoading(true);
+            try {
+              const { request } = await api.equipment.equipmentAddCreate(id.toString(), {
+                "amount": 1
+              });
+              if (request.status === 200) {
+                handleSearch();
+              }
+            } catch (error) {
+              console.error('Ошибка при получении данных:', error);
+            } finally {
+              setLoading(false);
+            }
+    };
+
     useEffect(() => {
-        setLoading(true)
-        getEquipmentByPrice(searchValue)
-        .then((response) => dispatch(setCatalog(response)))
-        setLoading(false)
-    }, [])
+        const fetchData = async () => {
+          setLoading(true);
+          try {
+            const { request } = await api.equipment.equipmentList();
+            if (request.status === 200) {
+              dispatch(setCatalog(JSON.parse(request.response).equipment));
+            }
+          } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
     return (
         <Container>
-            <LabNavigation company_name="ООО ЛабОборудование"/>
-            <ProcurementButton amount={6}/>
+            <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.EQUIPMENT }]} />
 
             <InputField
@@ -72,10 +101,11 @@ const EquipmentCatalog: FC = () => {
                     </div>
                 ) : (
                     <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-                        {catalog?.equipment.map((item: Equipment, index: number) => (
+                        {catalog.map((item: Equipment, index: number) => (
                             <Col key={index}>
                                 <EquipmentCard
                                     imageClickHandler={() => handleCardClick(item.id)}
+                                    buttonClickHandler={() => addToCart(item.id)}
                                     {...item}
                                 />
                             </Col>
