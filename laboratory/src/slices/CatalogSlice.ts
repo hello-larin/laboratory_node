@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Equipment } from "../api/Api";
+import { EquipmentResult } from "../modules/EquipmentApi";
 
 interface filterCatalog {
     searchValue: string,
-    catalog: Equipment[]
+    catalog: EquipmentResult
 }
 
 const initialState: filterCatalog = {
     searchValue: '',
-    catalog: [],
+    catalog: {
+        procurement_id: -1,
+	    procurement_count: 0,
+        equipment: []
+    },
 };
 
 const catalogSlice = createSlice({
@@ -18,7 +22,7 @@ const catalogSlice = createSlice({
         setSearchValue(state, action: PayloadAction<string>) {
             state.searchValue = action.payload;
         },
-        setCatalog(state, action: PayloadAction<Equipment[]>) {
+        setCatalog(state, action: PayloadAction<EquipmentResult>) {
             state.catalog = action.payload;
         },
     },

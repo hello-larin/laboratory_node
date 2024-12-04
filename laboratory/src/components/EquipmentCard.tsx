@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Button, Card } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import './../style.css'
 import default_image from "../1.png";
 
@@ -9,7 +9,6 @@ interface Props {
     price: number
     id: number
     imageClickHandler: () => void;
-    buttonClickHandler: () => void;
 }
 
 export const EquipmentCard: FC<Props> = ({
@@ -17,7 +16,6 @@ export const EquipmentCard: FC<Props> = ({
     price,
     image,
     imageClickHandler,
-    buttonClickHandler,
   }) => {
   
     return (
@@ -30,7 +28,6 @@ export const EquipmentCard: FC<Props> = ({
         <Card.Body>
             <Card.Title onClick={imageClickHandler}>{name}</Card.Title>
             <Card.Text>{price}</Card.Text>
-            <Button onClick={buttonClickHandler}>Добавить</Button>
         </Card.Body>
       </Card>
     );

@@ -3,40 +3,35 @@ import { FC, useEffect, useState } from "react";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { useParams } from "react-router-dom";
+import { Equipment, getEquipmentById } from "../modules/EquipmentApi";
 import LabNavigation from "../components/LabNav";
-import { api } from "../api";
 import { Col, Row, Spinner, Image, Container } from "react-bootstrap";
 import default_image from "../1.png";
 import { EQUIPMNET_MOCK } from "../modules/mock";
-import { useSelector } from "react-redux";
-import { Equipment } from "../api/Api";
 
 
 export const EquipmentPage: FC = () => {
   const [pageData, setPageData] = useState<Equipment | undefined>(undefined);
-  const user = useSelector((state: any) => state.auth);
 
   const { id } = useParams(); // ид страницы, пример: "/albums/12"
 
   useEffect(() => {
     if (!id) return;
-    const fetchData = async () => {
-      try {
-        const { request } = await api.equipment.equipmentRead(id);
-        if (request.status == 200) {
-          setPageData(JSON.parse(request.response))
-        }
-      } catch (error) {
-        console.error('Ошибка при получении данных:', error);
-      }
-    };
-
-    fetchData();
+    getEquipmentById(parseInt(id))
+      .then((response) => setPageData(response))
+      .catch(
+        () =>
+          setPageData(
+            EQUIPMNET_MOCK.equipment.find(
+              (eq) => String(eq.id) == id
+            )
+          ) /* В случае ошибки используем мок данные, фильтруем по ид */
+      );
   }, [id]);
 
   return (
     <Container>
-      <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
+      <LabNavigation company_name="ООО ЛабОборудование"/>
       <BreadCrumbs
         crumbs={[
           { label: ROUTE_LABELS.EQUIPMENT, path: ROUTES.EQUIPMENT },
