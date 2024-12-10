@@ -4,14 +4,15 @@ import './../style.css'
 import cart from '../cart.svg'
 
 interface Props {
-  amount: number
+  amount: number;
+  buttonClickHandler: () => void;
 }
 
-const ProcurementButton: FC<Props> = ({ amount }) => (
+const ProcurementButton: FC<Props> = ({ amount, buttonClickHandler }) => (
     <Container className="">
       <Row className="justify-content-end">
       <Col xs="auto">
-    <a className='btn btn-primary'><img src={cart}></img> {amount}</a>
+    <a className='btn btn-primary' onClick={buttonClickHandler}><img src={cart}></img> {amount}</a>
     </Col>
     </Row>
   </Container>

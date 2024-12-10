@@ -10,7 +10,7 @@ import LabNavigation from '../components/LabNav';
 
 
 const ProcurementsPage: React.FC = () => {
-    const procurements = useSelector((state: any) => state.procurements);
+    const procurements = useSelector((state: any) => state.procurements.procurements);
     const user = useSelector((state: any) => state.auth);
     const navigate = useNavigate();
 
@@ -18,15 +18,11 @@ const ProcurementsPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
               const { request } = await api.procurements.procurementsList();
               if (request.status == 200) {
                 dispatch(setProcurements(JSON.parse(request.response)))
                 console.log(procurements)
               }
-            } catch (error) {
-              console.error('Ошибка при получении данных:', error);
-            }
           };
       
           fetchData();

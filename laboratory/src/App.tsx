@@ -8,6 +8,7 @@ import RegisterPage from "./pages/RegistreationPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProcurementsPage from "./pages/ProcurementsPage";
 import OrderPage from "./pages/ProcurementPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path={ROUTES.PROFILE} element={<ProfilePage/>} />
         <Route path={ROUTES.PROCUREMENT} element={<ProcurementsPage/>} />
         <Route path={`${ROUTES.PROCUREMENT}/:id`} element={<OrderPage />} />
+        <Route path={`${ROUTES.CART}`} element={<CartPage />} />
       </Routes>
     </BrowserRouter>
   );

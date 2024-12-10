@@ -8,14 +8,29 @@ import { api } from '../api';
 const ProfilePage: React.FC = () => {
     const store_username = useSelector((state: any) => state.auth.user.username);
     const store_last_name = useSelector((state: any) => state.auth.user.last_name);
-    const store_first_name = useSelector((state: any) => state.auth.first_name);
+    const store_first_name = useSelector((state: any) => state.auth.user.first_name);
     const [username, setUsername] = useState(store_username);
     const [last_name, setLast_name] = useState(store_last_name);
     const [first_name, setFirst_name] = useState(store_first_name);
+    const [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const user = useSelector((state: any) => state.auth);
 
     const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        const { request } = await api.user.userUpdate({
+            "username": username,
+            "last_name": last_name,
+            "first_name": first_name
+        })
+        if (request.status == 200) {
+            console.log(request.response)
+            dispatch(setUser(JSON.parse(request.response)))
+            console.log(user.username)
+        }
+    };
+
+    const handlePassword = async (event: React.FormEvent) => {
         event.preventDefault();
         const { request } = await api.user.userUpdate({
             "username": username,
@@ -54,6 +69,17 @@ const ProfilePage: React.FC = () => {
                     />
                     <Button variant="primary" type="submit">
                     Edit
+                    </Button>
+            </Form>
+            <Form onSubmit={handlePassword}>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button variant="primary" type="submit">
+                    Change password
                     </Button>
             </Form>
         </Container>

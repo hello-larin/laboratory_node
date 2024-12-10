@@ -88,7 +88,7 @@ export interface Auth {
   password: string;
 }
 
-export interface User {
+export interface Register {
   /**
    * Username
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
@@ -97,6 +97,22 @@ export interface User {
    * @pattern ^[\w.@+-]+$
    */
   username: string;
+  /**
+   * Password
+   * @minLength 1
+   * @maxLength 128
+   */
+  password: string;
+  /**
+   * Is staff
+   * @default false
+   */
+  is_staff?: boolean;
+  /**
+   * Is superuser
+   * @default false
+   */
+  is_superuser?: boolean;
   /**
    * Last name
    * @maxLength 150
@@ -202,7 +218,7 @@ export interface Procurement {
   equipment?: Items[];
 }
 
-export interface Register {
+export interface User {
   /**
    * Username
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
@@ -212,21 +228,15 @@ export interface Register {
    */
   username: string;
   /**
-   * Password
-   * @minLength 1
-   * @maxLength 128
+   * Last name
+   * @maxLength 150
    */
-  password: string;
+  last_name?: string;
   /**
-   * Is staff
-   * @default false
+   * First name
+   * @maxLength 150
    */
-  is_staff?: boolean;
-  /**
-   * Is superuser
-   * @default false
-   */
-  is_superuser?: boolean;
+  first_name?: string;
 }
 
 export interface EditUser {
@@ -513,7 +523,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -527,13 +536,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/item/{id}/
      * @secure
      */
-    itemUpdate: (id: string, data: Items, params: RequestParams = {}) =>
+    itemUpdate: (id: string, data: AmountRequest, params: RequestParams = {}) =>
       this.request<Items[], any>({
         path: `/item/${id}/`,
         method: "PUT",
         body: data,
         secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -564,7 +572,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     loginCreate: (data: Auth, params: RequestParams = {}) =>
-      this.request<User, any>({
+      this.request<Register, any>({
         path: `/login`,
         method: "POST",
         body: data,

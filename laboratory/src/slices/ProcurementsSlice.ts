@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Orders } from '../api/Api';
 
-const initialState: Orders[] = [];
+interface state {
+    procurements: Orders[];
+}
+
+const initialState: state = {
+    procurements: [],
+}
 
 const procurementsSlice = createSlice({
     name: 'procurements',
@@ -9,7 +15,10 @@ const procurementsSlice = createSlice({
     reducers: {
         setProcurements(state, action: PayloadAction<Orders[]>) {
             console.log("ENETERED")
-            return action.payload;
+            state.procurements = action.payload;
+        },
+        clearCards: (state) => {
+            state.procurements = [];
         },
     },
 });

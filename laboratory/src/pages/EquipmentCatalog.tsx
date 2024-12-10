@@ -12,6 +12,7 @@ import { Equipment } from "../api/Api";
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
 import { api } from "../api";
+import { setCart } from "../slices/AuthSlice";
 
 const EquipmentCatalog: FC = () => {
     //const [searchValue, setSearchValue] = useState('')
@@ -27,15 +28,26 @@ const EquipmentCatalog: FC = () => {
     const navigate = useNavigate();
 
     const handleSearch = async () => {
-        setLoading(true)
-            const { request } = await api.equipment.equipmentList();
-            if (request.status == 200)
-                dispatch(setCatalog(request.response.equipment))
-        setLoading(false)
-        //setLoading(true)
-        //getEquipmentByPrice(searchValue)
-        //.then((response) => setCatalog(response))
-        //setLoading(false)
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const { request } = await api.equipment.equipmentList();
+          if (request.status === 200) {
+            dispatch(setCatalog(JSON.parse(request.response).equipment));
+            dispatch(setCart({
+              procurement_count: JSON.parse(request.response).procurement_count,
+              procurement_id: JSON.parse(request.response).procurement_id 
+            }))
+            console.log(user)
+          }
+        } catch (error) {
+          console.error('Ошибка при получении данных:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
     };
 
     const handleCardClick = (id: number) => {

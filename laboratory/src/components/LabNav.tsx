@@ -5,9 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES, ROUTE_LABELS } from "./../Routes";
 import { User } from '../api/Api';
 import { api } from '../api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setProcurement } from '../slices/ProcurementSlice';
 import ProcurementButton from './ProcurementButton';
+import { logout } from '../slices/AuthSlice';
 
 interface Props {
   company_name: string;
@@ -20,19 +21,23 @@ interface Props {
 }
 
 const LabNavigation: FC<Props> = ({ company_name, user }) => {
+  const current_user = useSelector((state: any) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();  
   const handleLogout = async ()  => {
+    console.log("LabNavigator")
+    console.log(user)
     const {request} = await api.logout.logoutCreate();
     if (request.status == 200)
-      navigate(`${ROUTES.PROCUREMENT}/${user.procurement_id}`);
+      dispatch(logout())
+      navigate(`${ROUTES.EQUIPMENT}`);
   };
 
   const handleCart = async () => {
     const {request} = await api.procurements.procurementsRead('' + user.procurement_id);
     if (request.status == 200){
       dispatch(setProcurement(request.response))
-      navigate(`${ROUTES.PROCUREMENT}`);
+      navigate(`${ROUTES.CART}`);
     }
   };
 
@@ -62,7 +67,7 @@ const LabNavigation: FC<Props> = ({ company_name, user }) => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    {user.procurement_count != -1 ? (<ProcurementButton amount={user.procurement_count} onClick={handleCart}/>) : null}
+    {user.procurement_count != -1 ? (<ProcurementButton amount={user.procurement_count} buttonClickHandler={handleCart}/>) : null}
     </>
   );
 };

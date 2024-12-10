@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import './style.css'
 
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <App />
