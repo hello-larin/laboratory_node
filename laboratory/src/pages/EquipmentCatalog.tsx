@@ -16,18 +16,17 @@ import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
 const EquipmentCatalog: FC = () => {
     //const [searchValue, setSearchValue] = useState('')
     const [loading, setLoading] = useState(false)
-    //const [catalog, setCatalog] = useState<EquipmentResult>()
+    const [catalog, setCatalog] = useState<EquipmentResult>()
 
     const dispatch = useDispatch();
     const searchValue = useSelector((state: any) => state.search.searchValue);
-    const catalog = useSelector((state: any) => state.search.catalog);
 
     const navigate = useNavigate();
 
     const handleSearch = async () => {
         setLoading(true)
             getEquipmentByPrice(searchValue)
-            .then((response) => dispatch(setCatalog(response)))
+            .then((response) => setCatalog(response))
             setLoading(false)
         //setLoading(true)
         //getEquipmentByPrice(searchValue)
@@ -43,7 +42,7 @@ const EquipmentCatalog: FC = () => {
     useEffect(() => {
         setLoading(true)
         getEquipmentByPrice(searchValue)
-        .then((response) => dispatch(setCatalog(response)))
+        .then((response) => setCatalog(response))
         setLoading(false)
     }, [])
 
