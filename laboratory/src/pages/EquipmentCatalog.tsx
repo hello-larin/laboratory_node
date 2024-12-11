@@ -1,7 +1,6 @@
 import "../style.css";
 import { FC, useState, useEffect } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import ProcurementButton from "../components/ProcurementButton";
 import InputField from "../components/InputField";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { EquipmentCard } from "../components/EquipmentCard";
@@ -30,21 +29,13 @@ const EquipmentCatalog: FC = () => {
     const handleSearch = async () => {
       const fetchData = async () => {
         setLoading(true);
-        try {
-          const { request } = await api.equipment.equipmentList();
+          const { request } = await api.equipment.equipmentList({price: searchValue});
           if (request.status === 200) {
             dispatch(setCatalog(JSON.parse(request.response).equipment));
-            dispatch(setCart({
-              procurement_count: JSON.parse(request.response).procurement_count,
-              procurement_id: JSON.parse(request.response).procurement_id 
-            }))
+            dispatch(setCart(JSON.parse(request.response)));
             console.log(user)
           }
-        } catch (error) {
-          console.error('Ошибка при получении данных:', error);
-        } finally {
           setLoading(false);
-        }
       };
   
       fetchData();
@@ -116,8 +107,8 @@ const EquipmentCatalog: FC = () => {
                         {catalog.map((item: Equipment, index: number) => (
                             <Col key={index}>
                                 <EquipmentCard
-                                    imageClickHandler={() => handleCardClick(item.id)}
-                                    buttonClickHandler={() => addToCart(item.id)}
+                                    imageClickHandler={() => handleCardClick('' + item.id)}
+                                    buttonClickHandler={() => addToCart('' + item.id)}
                                     {...item}
                                 />
                             </Col>

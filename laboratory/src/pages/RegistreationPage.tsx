@@ -4,6 +4,8 @@ import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { api } from '../api';
 import LabNavigation from '../components/LabNav';
 import { useSelector } from 'react-redux';
+import { BreadCrumbs } from '../components/BreadCrumbs';
+import { ROUTE_LABELS } from '../Routes';
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -30,6 +32,7 @@ const RegisterPage: React.FC = () => {
     return (
         <Container className="mt-5">
             <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
+            <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.REGISTER }]} />
             <h2>Register</h2>
             {created && <Alert variant='success'>Пользователь успешно создан</Alert>}
             {error && <Alert variant='error'>При создании пользователя произошла ошибка</Alert>}

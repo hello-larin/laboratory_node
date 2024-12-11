@@ -166,6 +166,11 @@ export interface Orders {
    * @minLength 1
    */
   moderator?: string | null;
+  /**
+   * Delivery number
+   * @maxLength 16
+   */
+  delivery_number?: string | null;
 }
 
 export interface EditProcurement {
@@ -251,13 +256,11 @@ export interface EditUser {
    */
   last_name?: string;
   /**
-   * Username
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   * Password
    * @minLength 1
-   * @maxLength 150
-   * @pattern ^[\w.@+-]+$
+   * @maxLength 128
    */
-  username?: string;
+  password?: string;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -414,10 +417,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/equipment/
      * @secure
      */
-    equipmentList: (params: RequestParams = {}) =>
+    equipmentList: (
+      query?: {
+        /** Price filter */
+        price?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<EquipmentResponse, any>({
         path: `/equipment/`,
         method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -608,10 +618,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/procurements/
      * @secure
      */
-    procurementsList: (params: RequestParams = {}) =>
+    procurementsList: (
+      query?: {
+        /** Filter by status */
+        status?: number;
+        /** Start date for filtering */
+        start_date?: string;
+        /** End date for filtering */
+        end_date?: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<Orders[], any>({
         path: `/procurements/`,
         method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,

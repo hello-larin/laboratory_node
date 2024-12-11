@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {EquipmentResponse, Register, User} from '../api/Api'
-import { act } from 'react';
+import { EquipmentResponse, Register } from '../api/Api'
 
 interface AuthState {
     user: Register | null;
@@ -15,11 +14,6 @@ const initialState: AuthState = {
     procurement_id: -1,
     procurement_count: -1
 };
-
-interface cart {
-    procurement_id: number;
-    procurement_count: number;
-}
 
 const authSlice = createSlice({
     name: 'auth',
@@ -36,12 +30,28 @@ const authSlice = createSlice({
             state.procurement_count = -1;
         },
         setCart(state, action: PayloadAction<EquipmentResponse>) {
-            state.procurement_id = action.payload.procurement_id
-            state.procurement_count = action.payload.procurement_count
-        }
+            if (action.payload.procurement_id != null)
+                state.procurement_id = action.payload.procurement_id
+            else
+                state.procurement_id = -1;
+            if (action.payload.procurement_count != null)
+                state.procurement_count = action.payload.procurement_count
+            else
+                state.procurement_count = -1;
+        },
+        clear: (state) => {
+            state.procurement_count = -1;
+            state.procurement_id = -1;
+        },
+        clearCart: (state) => {
+            state.user = null;
+            state.isAuthenticated = false;
+            state.procurement_id = -1;
+            state.procurement_count = -1;
+        },
     },
 });
 
-export const { setUser, logout, setCart } = authSlice.actions;
+export const { setUser, logout, setCart, clear, clearCart } = authSlice.actions;
 
 export default authSlice.reducer;

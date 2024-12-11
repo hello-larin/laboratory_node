@@ -1,13 +1,14 @@
 // src/components/OrderPage.js
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { setProcurement } from '../slices/ProcurementSlice';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Container} from 'react-bootstrap';
 import ProcurementCard from '../components/ProcurementViewCard';
 import { useParams } from 'react-router-dom';
 import { Procurement } from '../api/Api';
 import { api } from '../api';
 import LabNavigation from '../components/LabNav';
+import { ROUTE_LABELS, ROUTES } from '../Routes';
+import { BreadCrumbs } from '../components/BreadCrumbs';
 
 const OrderPage = () => {
   const [pageData, setPageData] = useState<Procurement | undefined>(undefined);
@@ -38,6 +39,12 @@ const OrderPage = () => {
   return (
     <Container>
       <LabNavigation company_name="ООО ЛабОборудование" user={user} />
+      <BreadCrumbs
+        crumbs={[
+          { label: ROUTE_LABELS.PROCUREMENT, path: ROUTES.PROCUREMENT },
+          { label: pageData?.address || "Оборудование" },
+        ]}
+      />
       <h1>Ваш заказ</h1>
       <p>Адрес {pageData.address}</p>
       <p>Телефон {pageData.phone}</p>
@@ -45,11 +52,7 @@ const OrderPage = () => {
       {pageData.equipment?.map(item => (
         <ProcurementCard
           key={item.id}
-          id={item.id?.toString()}
-          imageUrl={item.image}
-          title={item.name}
-          price={item.price?.toString()}
-          quantity={item.amount}
+          item={item}
         />
       ))}
     </Container>

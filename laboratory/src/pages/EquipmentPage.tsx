@@ -7,7 +7,6 @@ import LabNavigation from "../components/LabNav";
 import { api } from "../api";
 import { Col, Row, Spinner, Image, Container } from "react-bootstrap";
 import default_image from "../1.png";
-import { EQUIPMNET_MOCK } from "../modules/mock";
 import { useSelector } from "react-redux";
 import { Equipment } from "../api/Api";
 

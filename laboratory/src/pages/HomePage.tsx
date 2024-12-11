@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import LabNavigation from '../components/LabNav';
 import './HomePage.css'; // Убедитесь, что путь к вашему CSS файлу правильный

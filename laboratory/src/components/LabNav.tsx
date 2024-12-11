@@ -40,7 +40,7 @@ const LabNavigation: FC<Props> = ({ company_name, user }) => {
       navigate(`${ROUTES.CART}`);
     }
   };
-
+  console.log(current_user);
   return (
     <>
     <Navbar key="md" expand="md" className='myheader bg-body-tertiary mb-3'>
@@ -67,7 +67,7 @@ const LabNavigation: FC<Props> = ({ company_name, user }) => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    {user.procurement_count != -1 ? (<ProcurementButton amount={user.procurement_count} buttonClickHandler={handleCart}/>) : null}
+    {user.procurement_count > 0 ? (<ProcurementButton amount={user.procurement_count} buttonClickHandler={handleCart}/>) : null}
     </>
   );
 };

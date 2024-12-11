@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart, setUser } from "../slices/AuthSlice";
 import { api } from '../api';
 import LabNavigation from '../components/LabNav';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../Routes';
+import { ROUTE_LABELS, ROUTES } from '../Routes';
+import { BreadCrumbs } from '../components/BreadCrumbs';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -35,6 +36,7 @@ const LoginPage: React.FC = () => {
   return (
     <Container>
       <LabNavigation company_name="ООО ЛабОборудование" user={user} />
+      <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.LOGIN }]} />
       <h2>Login</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group>

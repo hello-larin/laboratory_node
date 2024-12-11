@@ -1,38 +1,31 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Items } from '../api/Api';
 
 interface Props {
-    id: number;
-    imageUrl: string;
-    title: string;
-    price: number;
-    quantity: number;
+    item: Items;
     onIncrease?: () => void;
     onDecrease?: () => void;
 }
 
 const HorizontalCard: FC<Props> = ({
-    id,
-    imageUrl,
-    title,
-    price,
-    quantity,
+    item,
     onIncrease,
     onDecrease,
 }) => {
     return (
         <Card style={{ display: 'flex', flexDirection: 'row', margin: '1rem' }}>
-            <Card.Img variant="top" src={imageUrl} style={{ width: '200px', height: 'auto' }} />
+            <Card.Img variant="top" src={item.image} style={{ width: '200px', height: 'auto' }} />
             <Card.Body style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1rem' }}>
-                <Card.Title>{title}</Card.Title>
+                <Card.Title>{item.name}</Card.Title>
                 <Card.Text>
-                    Цена: {price} руб.
+                    Цена: {item.price} руб.
                 </Card.Text>
             </Card.Body>
             <Card.Body style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
                 <Button variant="outline-primary" onClick={onDecrease}>-</Button>
-                <span style={{ margin: '0.5rem' }}>{quantity}</span>
+                <span style={{ margin: '0.5rem' }}>{item.amount}</span>
                 <Button variant="outline-primary" onClick={onIncrease}>+</Button>
             </Card.Body>
         </Card>
