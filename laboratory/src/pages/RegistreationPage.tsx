@@ -30,32 +30,32 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <Container className="mt-5">
+        <Container>
             <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.REGISTER }]} />
-            <h2>Register</h2>
+            <h2>Регистрация</h2>
             {created && <Alert variant='success'>Пользователь успешно создан</Alert>}
             {error && <Alert variant='error'>При создании пользователя произошла ошибка</Alert>}
             <Form onSubmit={handleSubmit}>
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label>Логин</Form.Label>
                     <Form.Control
                         type="username"
-                        placeholder="Enter username"
+                        placeholder="Введите логин"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Пароль</Form.Label>
                     <Form.Control
                         type="password"
-                        placeholder="Password"
+                        placeholder="Введите пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
 
                 <Button variant="primary" type="submit">
-                    Register
+                    Зарегистрироваться
                 </Button>
             </Form>
         </Container>

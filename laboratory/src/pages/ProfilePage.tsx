@@ -33,29 +33,29 @@ const ProfilePage: React.FC = () => {
         <Container>
             <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.PROFILE }]} />
-            <h2>Profile</h2>
+            <h2>Профиль {user.username}</h2>
             <Form onSubmit={handleSubmit}>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Пароль</Form.Label>
                     <Form.Control
-                        placeholder="Password"
+                        placeholder="Пароль"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <Form.Label>First name</Form.Label>
+                    <Form.Label>Имя</Form.Label>
                     <Form.Control
-                        placeholder="first name"
+                        placeholder="Введите имя"
                         value={first_name}
                         onChange={(e) => setFirst_name(e.target.value)}
                     />
-                    <Form.Label>Last name</Form.Label>
+                    <Form.Label>Фамилия</Form.Label>
                     <Form.Control
-                        placeholder="last name"
+                        placeholder="Введите фамилию"
                         value={last_name}
                         onChange={(e) => setLast_name(e.target.value)}
                     />
                     <Button variant="primary" type="submit">
-                    Edit
+                    Редактировать
                     </Button>
             </Form>
         </Container>

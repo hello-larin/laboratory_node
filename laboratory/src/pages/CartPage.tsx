@@ -38,14 +38,14 @@ const CartPage = () => {
         }
     }
 
-    const handleAddClick = async (id) => {
+    const handleAddClick = async (id: string) => {
         const { request } = await api.item.itemUpdate(id, { amount: 1 });
         if (request.status === 200) {
             fetchData();
         }
     };
 
-    const handleDecClick = async (id) => {
+    const handleDecClick = async (id: string) => {
         const { request } = await api.item.itemUpdate(id, { amount: -1 });
         if (request.status === 200) {
             fetchData();
@@ -75,8 +75,9 @@ const CartPage = () => {
     }, [user.procurement_id]);
 
     useEffect(() => {
-        if (pageData?.equipment?.length <= 0)
-            navigate(`${ROUTES.EQUIPMENT}`)
+        if (pageData?.equipment && pageData.equipment.length <= 0) {
+            navigate(`${ROUTES.EQUIPMENT}`);
+        }
     }, [pageData]);
 
     if (!pageData) {
@@ -105,16 +106,16 @@ const CartPage = () => {
                         onChange={(e) => dispatch(setPhone(e.target.value))}
                     />
                 </Form.Group>
-            {pagedata && pageData.equipment?.map((item) => (
+            {pageData.equipment?.map((item) => (
                 <HorizontalCard
                     key={item.id}
                     item={item}
-                    onIncrease={() => handleAddClick(item.id)}
-                    onDecrease={() => handleDecClick(item.id)}
+                    onIncrease={() => handleAddClick('' + item.id)}
+                    onDecrease={() => handleDecClick('' + item.id)}
                 />
             ))}
             <Button variant="primary" onClick={handleSubmit}>
-                    Submit
+                    Сформировать
                 </Button>
             </Form>
         </Container>

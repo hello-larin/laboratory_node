@@ -102,7 +102,7 @@ const ProcurementsPage: React.FC = () => {
                 </thead>
                 <tbody>
                     {procurements.map((proc: Orders) => (
-                        <tr key={proc.id} onClick={() => handleCardClick('' + proc.id)}>
+                        <tr key={proc.id} onClick={() => handleCardClick(proc.id || 1)}>
                             <td>{proc.delivery_number}</td>
                             <td>{proc.address}</td>
                             <td>{proc.phone}</td>

@@ -2,7 +2,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import LabNavigation from '../components/LabNav';
 import './HomePage.css'; // Убедитесь, что путь к вашему CSS файлу правильный
 import { useSelector } from 'react-redux';
-import background_img from './background.jpg';
 
 const HomePage = () => {
   const user = useSelector((state: any) => state.auth);

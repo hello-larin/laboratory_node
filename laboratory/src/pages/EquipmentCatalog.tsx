@@ -107,9 +107,9 @@ const EquipmentCatalog: FC = () => {
                         {catalog.map((item: Equipment, index: number) => (
                             <Col key={index}>
                                 <EquipmentCard
-                                    imageClickHandler={() => handleCardClick('' + item.id)}
-                                    buttonClickHandler={() => addToCart('' + item.id)}
-                                    {...item}
+                                    imageClickHandler={() => handleCardClick(item.id || 1)}
+                                    buttonClickHandler={() => addToCart(item.id || 1)}
+                                    equipment={item}
                                 />
                             </Col>
                         ))}

@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES, ROUTE_LABELS } from "./../Routes";
 import { User } from '../api/Api';
 import { api } from '../api';
-import { useDispatch, useSelector } from 'react-redux';
-import { setProcurement } from '../slices/ProcurementSlice';
+import { useDispatch } from 'react-redux';
 import ProcurementButton from './ProcurementButton';
 import { logout } from '../slices/AuthSlice';
 
@@ -21,7 +20,6 @@ interface Props {
 }
 
 const LabNavigation: FC<Props> = ({ company_name, user }) => {
-  const current_user = useSelector((state: any) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();  
   const handleLogout = async ()  => {
@@ -34,13 +32,8 @@ const LabNavigation: FC<Props> = ({ company_name, user }) => {
   };
 
   const handleCart = async () => {
-    const {request} = await api.procurements.procurementsRead('' + user.procurement_id);
-    if (request.status == 200){
-      dispatch(setProcurement(request.response))
       navigate(`${ROUTES.CART}`);
-    }
   };
-  console.log(current_user);
   return (
     <>
     <Navbar key="md" expand="md" className='myheader bg-body-tertiary mb-3'>

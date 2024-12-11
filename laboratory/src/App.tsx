@@ -12,7 +12,7 @@ import CartPage from "./pages/CartPage";
 
 function App() {
   return (
-    <BrowserRouter basename="/node_rip">
+    <BrowserRouter>
       <Routes>
       <Route path={ROUTES.HOME} index element={<HomePage />} />
         <Route path={ROUTES.EQUIPMENT} element={<EquipmentCatalog />} />

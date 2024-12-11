@@ -37,12 +37,12 @@ const LoginPage: React.FC = () => {
     <Container>
       <LabNavigation company_name="ООО ЛабОборудование" user={user} />
       <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.LOGIN }]} />
-      <h2>Login</h2>
+      <h2>Авторизация</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
-          <Form.Label>Username</Form.Label>
+          <Form.Label>Логин</Form.Label>
           <Form.Control
-            placeholder="Enter username"
+            placeholder="Введите логин"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -50,10 +50,10 @@ const LoginPage: React.FC = () => {
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Пароль</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Password"
+            placeholder="Введите пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -61,7 +61,7 @@ const LoginPage: React.FC = () => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Login
+          Войти
         </Button>
       </Form>
     </Container>

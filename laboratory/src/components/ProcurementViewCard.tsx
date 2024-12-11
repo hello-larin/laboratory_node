@@ -14,7 +14,7 @@ const ProcurementCard: FC<Props> = ({
 }) => {
   return (
     <Card style={{ display: 'flex', flexDirection: 'row', margin: '1rem' }}>
-      <Card.Img variant="top" src={item.image | default_image} style={{ width: '200px', height: 'auto' }} />
+      <Card.Img variant="top" src={item.image || default_image} style={{ width: '200px', height: 'auto' }} />
       <Card.Body style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1rem' }}>
         <Card.Title>{item.name}</Card.Title>
         <Card.Text>
