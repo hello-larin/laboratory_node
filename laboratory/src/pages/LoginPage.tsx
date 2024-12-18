@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCart, setUser } from "../slices/AuthSlice";
+import { loginUser, setCart, setUser } from "../slices/AuthSlice";
 import { api } from '../api';
 import LabNavigation from '../components/LabNav';
 import { useNavigate } from 'react-router-dom';
@@ -17,18 +17,8 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const loginResponse = await api.login.loginCreate({
-      username,
-      password,
-    });
-
-    if (loginResponse.request.status === 200) {
-      dispatch(setUser(JSON.parse(loginResponse.request.response)));
-      const equipmentResponse = await api.equipment.equipmentList();
-      if (equipmentResponse.request.status === 200) {
-        // Обработка успешного ответа
-        dispatch(setCart(JSON.parse(equipmentResponse.request.response)))
-      }
+    const resultAction = dispatch(loginUser({username:username, password:password}))
+    if (loginUser.fulfilled.match(resultAction)) {
       navigate(`${ROUTES.PROCUREMENT}`);
     }
   };

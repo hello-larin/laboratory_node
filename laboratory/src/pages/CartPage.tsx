@@ -8,7 +8,7 @@ import { Procurement } from '../api/Api';
 import { setAddress, setPhone } from '../slices/CurrentProcurementSlice';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LABELS, ROUTES } from '../Routes';
-import { clearCart } from '../slices/AuthSlice';
+import { clearCart, setCartCount } from '../slices/AuthSlice';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 
 const CartPage = () => {
@@ -76,6 +76,7 @@ const CartPage = () => {
 
     useEffect(() => {
         if (pageData?.equipment && pageData.equipment.length <= 0) {
+            dispatch(setCartCount(0))
             navigate(`${ROUTES.EQUIPMENT}`);
         }
     }, [pageData]);

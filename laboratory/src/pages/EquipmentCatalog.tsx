@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { Equipment } from "../api/Api";
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
+import { setSearchValue, setCatalog, fetchEquipmentList, searchEquipment, addEquipmentToCart } from "../slices/CatalogSlice";
 import { api } from "../api";
 import { setCart } from "../slices/AuthSlice";
 
@@ -26,59 +26,31 @@ const EquipmentCatalog: FC = () => {
 
     const navigate = useNavigate();
 
-    const handleSearch = async () => {
-      const fetchData = async () => {
-        setLoading(true);
-          const { request } = await api.equipment.equipmentList({price: searchValue});
-          if (request.status === 200) {
-            dispatch(setCatalog(JSON.parse(request.response).equipment));
-            dispatch(setCart(JSON.parse(request.response)));
-            console.log(user)
-          }
-          setLoading(false);
-      };
-  
-      fetchData();
-    };
 
-    const handleCardClick = (id: number) => {
-        // клик на карточку, переход на страницу оборудования
-        navigate(`${ROUTES.EQUIPMENT}/${id}`);
-    };
-
-    const addToCart = async (id: number) => {
-            setLoading(true);
-            try {
-              const { request } = await api.equipment.equipmentAddCreate(id.toString(), {
-                "amount": 1
-              });
-              if (request.status === 200) {
-                handleSearch();
-              }
-            } catch (error) {
-              console.error('Ошибка при получении данных:', error);
-            } finally {
-              setLoading(false);
-            }
-    };
 
     useEffect(() => {
-        const fetchData = async () => {
-          setLoading(true);
-          try {
-            const { request } = await api.equipment.equipmentList();
-            if (request.status === 200) {
-              dispatch(setCatalog(JSON.parse(request.response).equipment));
-            }
-          } catch (error) {
-            console.error('Ошибка при получении данных:', error);
-          } finally {
-            setLoading(false);
+      const fetchData = async () => {
+        setLoading(true);
+        dispatch(fetchEquipmentList());
+        setLoading(false);
+      }
+      fetchData()
+    }, []);
+  
+    const handleSearch = async () => {
+      dispatch(searchEquipment(searchValue));
+    };
+  
+    const handleCardClick = async (id: number) => {
+      navigate(`${ROUTES.EQUIPMENT}/${id}`);
+    };
+  
+    const handleAddToCart = async (id: number) => {
+      const resultAction = await dispatch(addEquipmentToCart(id));;
+          if (addEquipmentToCart.fulfilled.match(resultAction)) {
+            dispatch(searchEquipment(searchValue));
           }
-        };
-    
-        fetchData();
-      }, []);
+    };
 
     return (
         <Container>
@@ -108,7 +80,7 @@ const EquipmentCatalog: FC = () => {
                             <Col key={index}>
                                 <EquipmentCard
                                     imageClickHandler={() => handleCardClick(item.id || 1)}
-                                    buttonClickHandler={() => addToCart(item.id || 1)}
+                                    buttonClickHandler={() => handleAddToCart(item.id || 1)}
                                     equipment={item}
                                 />
                             </Col>

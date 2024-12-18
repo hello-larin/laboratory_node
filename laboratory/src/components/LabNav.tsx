@@ -7,7 +7,7 @@ import { User } from '../api/Api';
 import { api } from '../api';
 import { useDispatch } from 'react-redux';
 import ProcurementButton from './ProcurementButton';
-import { logout } from '../slices/AuthSlice';
+import { logout, logoutUser } from '../slices/AuthSlice';
 
 interface Props {
   company_name: string;
@@ -22,13 +22,11 @@ interface Props {
 const LabNavigation: FC<Props> = ({ company_name, user }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();  
-  const handleLogout = async ()  => {
-    console.log("LabNavigator")
-    console.log(user)
-    const {request} = await api.logout.logoutCreate();
-    if (request.status == 200)
-      dispatch(logout())
+  const handleLogout = async () => {
+    const resultAction = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(resultAction)) {
       navigate(`${ROUTES.EQUIPMENT}`);
+    }
   };
 
   const handleCart = async () => {
