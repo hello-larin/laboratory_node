@@ -8,6 +8,7 @@
 # [Фронтенд](https://github.com/hello-larin/node_rip)
 - [SPA (лаб 5)](https://github.com/hello-larin/node_rip/tree/main)
 - [PWA (лаб 6)](https://github.com/hello-larin/node_rip/tree/gh-pages)
+- [PWA (лаб 6)](https://hello-larin.github.io/node_rip/)
 - [Redux (лаб 6)](https://github.com/hello-larin/node_rip/tree/PWA-Tauri-Redux)
 - [Tauri (лаб 6)](https://github.com/hello-larin/node_rip/tree/tauri)
 - [Redux-toolkit (лаб 7)](https://github.com/hello-larin/node_rip/tree/redux-toolkit)
