@@ -10,7 +10,6 @@ import { BreadCrumbs } from "../components/BreadCrumbs";
 import { Equipment } from "../api/Api";
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchValue, setCatalog, fetchEquipmentList, searchEquipment, addEquipmentToCart } from "../slices/CatalogSlice";
-import { api } from "../api";
 import { setCart } from "../slices/AuthSlice";
 
 const EquipmentCatalog: FC = () => {
@@ -29,32 +28,32 @@ const EquipmentCatalog: FC = () => {
 
 
     useEffect(() => {
-      const fetchData = async () => {
-        setLoading(true);
-        dispatch(fetchEquipmentList());
-        setLoading(false);
-      }
-      fetchData()
+        const fetchData = async () => {
+            setLoading(true);
+            dispatch(fetchEquipmentList());
+            setLoading(false);
+        }
+        fetchData()
     }, []);
-  
+
     const handleSearch = async () => {
-      dispatch(searchEquipment(searchValue));
+        dispatch(searchEquipment(searchValue));
     };
-  
+
     const handleCardClick = async (id: number) => {
-      navigate(`${ROUTES.EQUIPMENT}/${id}`);
+        navigate(`${ROUTES.EQUIPMENT}/${id}`);
     };
-  
+
     const handleAddToCart = async (id: number) => {
-      const resultAction = await dispatch(addEquipmentToCart(id));;
-          if (addEquipmentToCart.fulfilled.match(resultAction)) {
+        const resultAction = await dispatch(addEquipmentToCart(id));
+        if (addEquipmentToCart.fulfilled.match(resultAction)) {
             dispatch(searchEquipment(searchValue));
-          }
+        }
     };
 
     return (
         <Container>
-            <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
+            <LabNavigation company_name="ООО ЛабОборудование" user={user} />
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.EQUIPMENT }]} />
 
             <InputField

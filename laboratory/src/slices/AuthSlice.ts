@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchEquipmentList, searchEquipment } from './CatalogSlice';
 import { EquipmentResponse, Register } from '../api/Api'
 import { api } from '../api';
 
 // Thunk для логина
-export const loginUser = createAsyncThunk<Register, {username: string, password: string}>(
+export const loginUser = createAsyncThunk<Register, { username: string, password: string }>(
     'auth/loginUser',
     async ({ username, password }) => {
-            const response = await api.login.loginCreate({ username, password });
-            if (response.request.status === 200) {
-                return JSON.parse(response.request.response);
-            }
+        const response = await api.login.loginCreate({ username, password });
+        if (response.request.status === 200) {
+            return JSON.parse(response.request.response);
+        }
     }
 );
 
@@ -29,10 +30,10 @@ export const logoutUser = createAsyncThunk(
     async () => {
         const { request } = await api.logout.logoutCreate();
         if (request.status === 200) {
-          return;
+            return;
         }
     }
-  );
+);
 
 interface AuthState {
     user: Register | null;
@@ -87,7 +88,15 @@ const authSlice = createSlice({
                 state.isAuthenticated = false;
                 state.procurement_id = -1;
                 state.procurement_count = -1;
-              })
+            })
+            .addCase(fetchEquipmentList.fulfilled, (state, action: PayloadAction<EquipmentResponse>) => {
+                state.procurement_count = action.payload.procurement_count;
+                state.procurement_id = action.payload.procurement_id;
+            })
+            .addCase(searchEquipment.fulfilled, (state, action: PayloadAction<EquipmentResponse>) => {
+                state.procurement_count = action.payload.procurement_count;
+                state.procurement_id = action.payload.procurement_id;
+            })
     },
 });
 

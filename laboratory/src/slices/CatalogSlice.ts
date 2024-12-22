@@ -1,26 +1,32 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Equipment } from "../api/Api";
+import { Equipment, EquipmentResponse } from "../api/Api";
 import { api } from "../api";
 
-export const fetchEquipmentList = createAsyncThunk<Equipment[], void>(
+export const fetchEquipmentList = createAsyncThunk<EquipmentResponse, void>(
     'catalog/fetchEquipmentList',
     async () => {
         const { request } = await api.equipment.equipmentList();
         if (request.status === 200) {
-          return JSON.parse(request.response).equipment;
+          return JSON.parse(request.response);
         } 
     }
   );
   
   // Thunk для поиска оборудования
-  export const searchEquipment = createAsyncThunk<Equipment[], string>(
+  export const searchEquipment = createAsyncThunk<EquipmentResponse, string>(
     'catalog/searchEquipment',
     async (searchValue) => {
-    
-        const { request } = await api.equipment.equipmentList({ price: +searchValue });
-        if (request.status === 200) {
-          return JSON.parse(request.response).equipment;
-        } 
+        if (searchValue !== ''){
+          const { request } = await api.equipment.equipmentList({ price: +searchValue });
+          if (request.status === 200) {
+            return JSON.parse(request.response);
+          } 
+        } else {
+          const { request } = await api.equipment.equipmentList();
+          if (request.status === 200) {
+            return JSON.parse(request.response);
+          } 
+        }
     }
   );
   
@@ -37,12 +43,16 @@ export const fetchEquipmentList = createAsyncThunk<Equipment[], void>(
 
 interface filterCatalog {
     searchValue: string,
-    catalog: Equipment[]
+    catalog: Equipment[],
+    procurement_count: number,
+    procurement_id: number,
 }
 
 const initialState: filterCatalog = {
     searchValue: '',
     catalog: [],
+    procurement_count: -1,
+    procurement_id: -1,
 };
 
 const catalogSlice = createSlice({
@@ -58,11 +68,15 @@ const catalogSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-          .addCase(fetchEquipmentList.fulfilled, (state, action: PayloadAction<Equipment[]>) => {
-            state.catalog = action.payload;
+          .addCase(fetchEquipmentList.fulfilled, (state, action: PayloadAction<EquipmentResponse>) => {
+            state.catalog = action.payload.equipment;
+            state.procurement_count = action.payload.procurement_count;
+            state.procurement_id = action.payload.procurement_id;
           })
-          .addCase(searchEquipment.fulfilled, (state, action: PayloadAction<Equipment[]>) => {
-            state.catalog = action.payload;
+          .addCase(searchEquipment.fulfilled, (state, action: PayloadAction<EquipmentResponse>) => {
+            state.catalog = action.payload.equipment;
+            state.procurement_count = action.payload.procurement_count;
+            state.procurement_id = action.payload.procurement_id;
           })
           .addCase(addEquipmentToCart.fulfilled, () => {
           })

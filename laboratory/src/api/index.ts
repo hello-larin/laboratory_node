@@ -24,5 +24,5 @@ const csrftoken = getCookie('csrftoken');
 axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
 
 export const api = new Api({
-    baseURL: 'http://192.168.100.4:3000/api/',
+    baseURL: 'http://localhost:3000/api/',
 });
