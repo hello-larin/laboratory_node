@@ -7,6 +7,7 @@ export default defineConfig({
   base: "/laboratory_node", // Замените RepoName на имя вашего репозитория
   server: { 
     port: 3000,
+    host: '0.0.0.0',
     proxy: {
       "/api": {
         target: "http://192.168.100.4:8000",
