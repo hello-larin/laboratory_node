@@ -1,85 +1,89 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Container, Form } from 'react-bootstrap';
 import HorizontalCard from '../components/ProcurementCard';
-import { api } from '../api';
 import LabNavigation from '../components/LabNav';
-import { Procurement } from '../api/Api';
-import { setAddress, setPhone } from '../slices/CurrentProcurementSlice';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LABELS, ROUTES } from '../Routes';
-import { clearCart, setCartCount } from '../slices/AuthSlice';
 import { BreadCrumbs } from '../components/BreadCrumbs';
+import { api } from '../api';
+import { setAddress, setPhone } from '../slices/CurrentProcurementSlice';
+import { clearCart, setCartCount } from '../slices/AuthSlice';
+
+// Thunk to update procurement
+export const updateProcurement = (procurementId, address, phone) => async (dispatch) => {
+    const { request } = await api.procurements.procurementsUpdate(procurementId, { address, phone });
+    if (request.status === 200) {
+        dispatch(fetchProcurementData(procurementId));
+        dispatch(submitProcurement(procurementId));
+    }
+};
+
+// Thunk to submit procurement
+export const submitProcurement = (procurementId) => async (dispatch) => {
+    const { request } = await api.procurements.procurementsSubmitCreate(procurementId);
+    if (request.status === 200) {
+        dispatch(clearCart());
+        // Navigate to the procurement page
+        // This navigation logic should be handled in the component
+    }
+};
+
+// Thunk to update item amount
+export const updateItemAmount = (itemId, amount) => async (dispatch) => {
+    const { request } = await api.item.itemUpdate(itemId, { amount });
+    if (request.status === 200) {
+        dispatch(fetchProcurementData(procurementId));
+    }
+};
+
+// Thunk to fetch procurement data
+export const fetchProcurementData = (procurementId) => async (dispatch) => {
+    const { request } = await api.procurements.procurementsRead(procurementId);
+    if (request.status === 200) {
+        const data = JSON.parse(request.response);
+        dispatch(setAddress(data.address));
+        dispatch(setPhone(data.phone));
+        return data;
+    }
+    return null;
+};
 
 const CartPage = () => {
-    const [pageData, setPageData] = useState<Procurement | undefined>(undefined);
-    const user = useSelector((state: any) => state.auth);
+    const [pageData, setPageData] = useState(null);
+    const user = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    const address = useSelector((state: any) => state.currentProcurement.address);
-    const phone = useSelector((state: any) => state.currentProcurement.phone);
+    const address = useSelector((state) => state.currentProcurement.address);
+    const phone = useSelector((state) => state.currentProcurement.phone);
     const navigate = useNavigate();
-
-    const handleSubmit = async () => {
-        const { request } = await api.procurements.procurementsUpdate(user.procurement_id,
-             { address: address,
-               phone: phone
-              });
-        if (request.status === 200) {
-            fetchData();
-            SubmitProcurement();
-        }
-    }
-
-    const SubmitProcurement = async () => {
-        const { request } = await api.procurements.procurementsSubmitCreate(user.procurement_id);
-        if (request.status === 200) {
-            dispatch(clearCart());
-            navigate(`${ROUTES.PROCUREMENT}`);
-        }
-    }
-
-    const handleAddClick = async (id: string) => {
-        const { request } = await api.item.itemUpdate(id, { amount: 1 });
-        if (request.status === 200) {
-            fetchData();
-        }
-    };
-
-    const handleDecClick = async (id: string) => {
-        const { request } = await api.item.itemUpdate(id, { amount: -1 });
-        if (request.status === 200) {
-            fetchData();
-        }
-    };
-
-    const fetchData = async () => {
-        const { request } = await api.procurements.procurementsRead(user.procurement_id);
-        if (request.status === 200) {
-            setPageData(JSON.parse(request.response));
-        }
-    };
-
-    const fetchDataID = async () => {
-        const { request } = await api.procurements.procurementsRead(user.procurement_id);
-        if (request.status === 200) {
-            setPageData(JSON.parse(request.response));
-            dispatch(setAddress(JSON.parse(request.response).address));
-            dispatch(setPhone(JSON.parse(request.response).phone));
-        }
-    };
 
     useEffect(() => {
         if (user.procurement_id === -1) return;
-        fetchDataID();
-        console.log(address, phone)
-    }, [user.procurement_id]);
+        const fetchData = async () => {
+            const data = await dispatch(fetchProcurementData(user.procurement_id));
+            setPageData(data);
+        };
+        fetchData();
+    }, [user.procurement_id, dispatch]);
 
     useEffect(() => {
         if (pageData?.equipment && pageData.equipment.length <= 0) {
-            dispatch(setCartCount(0))
-            navigate(`${ROUTES.EQUIPMENT}`);
+            dispatch(setCartCount(0));
+            navigate(ROUTES.EQUIPMENT);
         }
-    }, [pageData]);
+    }, [pageData, dispatch, navigate]);
+
+    const handleSubmit = () => {
+        dispatch(updateProcurement(user.procurement_id, address, phone));
+    };
+
+    const handleAddClick = (id) => {
+        dispatch(updateItemAmount(id, 1));
+    };
+
+    const handleDecClick = (id) => {
+        dispatch(updateItemAmount(id, -1));
+    };
 
     if (!pageData) {
         return <div>Загрузка...</div>;
@@ -107,15 +111,15 @@ const CartPage = () => {
                         onChange={(e) => dispatch(setPhone(e.target.value))}
                     />
                 </Form.Group>
-            {pageData.equipment?.map((item) => (
-                <HorizontalCard
-                    key={item.id}
-                    item={item}
-                    onIncrease={() => handleAddClick('' + item.id)}
-                    onDecrease={() => handleDecClick('' + item.id)}
-                />
-            ))}
-            <Button variant="primary" onClick={handleSubmit}>
+                {pageData.equipment?.map((item) => (
+                    <HorizontalCard
+                        key={item.id}
+                        item={item}
+                        onIncrease={() => handleAddClick('' + item.id)}
+                        onDecrease={() => handleDecClick('' + item.id)}
+                    />
+                ))}
+                <Button variant="primary" onClick={handleSubmit}>
                     Сформировать
                 </Button>
             </Form>
