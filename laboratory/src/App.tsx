@@ -6,7 +6,7 @@ import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (
-    <BrowserRouter basename="/node_rip">
+    <BrowserRouter basename="/laboratory_node">
       <Routes>
       <Route path={ROUTES.HOME} index element={<HomePage />} />
         <Route path={ROUTES.EQUIPMENT} element={<EquipmentCatalog />} />

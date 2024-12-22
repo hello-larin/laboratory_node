@@ -1,8 +1,7 @@
 import "../style.css";
 import { FC, useState, useEffect } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import { Equipment, getEquipmentByPrice } from "../modules/EquipmentApi";
-import ProcurementButton from "../components/ProcurementButton";
+import { Equipment, EquipmentResult, getEquipmentByPrice } from "../modules/EquipmentApi";
 import InputField from "../components/InputField";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { EquipmentCard } from "../components/EquipmentCard";
@@ -11,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchValue, setCatalog } from "../slices/CatalogSlice";
+import { setSearchValue } from "../slices/CatalogSlice";
 
 const EquipmentCatalog: FC = () => {
     //const [searchValue, setSearchValue] = useState('')
@@ -49,7 +48,6 @@ const EquipmentCatalog: FC = () => {
     return (
         <Container>
             <LabNavigation company_name="ООО ЛабОборудование"/>
-            <ProcurementButton amount={6}/>
             <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.EQUIPMENT }]} />
 
             <InputField
