@@ -10,6 +10,12 @@ import LabNavigation from '../components/LabNav';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 import { Orders } from '../api/Api';
 
+const statusMap = {
+    1: 'Черновик',
+    2: 'Удалён',
+    3: 'Сформирован',
+    4: 'Завершён'
+};
 
 const ProcurementsPage: React.FC = () => {
     const procurements = useSelector((state: any) => state.procurements.procurements);
@@ -109,7 +115,7 @@ const ProcurementsPage: React.FC = () => {
                             <td>{proc.submited_date}</td>
                             <td>{proc.accepted_date}</td>
                             <td>{proc.moderator}</td>
-                            <td>{proc.status}</td>
+                            <td>{statusMap[proc.status]}</td>
                         </tr>
                     ))}
                 </tbody>
