@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../Routes';
-const navigate = useNavigate();
+import { api } from '../api';
+import { clearCart } from '../slices/AuthSlice';
 // Thunk to update procurement
 export const updateProcurement = (procurementId, address, phone) => async (dispatch) => {
     const { request } = await api.procurements.procurementsUpdate(procurementId, { address, phone });
@@ -15,7 +16,7 @@ export const submitProcurement = (procurementId) => async (dispatch) => {
     const { request } = await api.procurements.procurementsSubmitCreate(procurementId);
     if (request.status === 200) {
         dispatch(clearCart());
-        navigate(`${ROUTES.PROCUREMENT}`);
+        return true;
     }
 };
 

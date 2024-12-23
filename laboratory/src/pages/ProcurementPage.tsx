@@ -1,6 +1,6 @@
 // src/components/OrderPage.js
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Container} from 'react-bootstrap';
 import ProcurementCard from '../components/ProcurementViewCard';
 import { useParams } from 'react-router-dom';
@@ -9,16 +9,27 @@ import { api } from '../api';
 import LabNavigation from '../components/LabNav';
 import { ROUTE_LABELS, ROUTES } from '../Routes';
 import { BreadCrumbs } from '../components/BreadCrumbs';
-import { fetchProcurement } from '../slices/ProcurementSlice';
 
 const OrderPage = () => {
-  const pageData = useSelector((state: any) => state.procurement.procurement);
+  const [pageData, setPageData] = useState<Procurement | undefined>(undefined);
   const { id } = useParams(); // ид страницы, пример: "/albums/12"
   const user = useSelector((state: any) => state.auth);
-  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchProcurement(id))
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        const { request } = await api.procurements.procurementsRead(id);
+        if (request.status === 200) {
+          setPageData(JSON.parse(request.response));
+        }
+      } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   if (!pageData) {

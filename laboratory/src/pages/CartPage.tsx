@@ -22,7 +22,9 @@ const CartPage = () => {
     const phone = useSelector((state: any) => state.currentProcurement.phone);
 
     const handleSubmit = async () => {
-        dispatch(updateProcurement(user.procurement_id, address, phone));
+        if (dispatch(updateProcurement(user.procurement_id, address, phone))) {
+            navigate(`${ROUTES.EQUIPMENT}`)
+        }
     }
 
     const handleAddClick = async (id: string) => {

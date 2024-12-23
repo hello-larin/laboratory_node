@@ -20,14 +20,10 @@ export const EquipmentPage: FC = () => {
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
-      try {
         const { request } = await api.equipment.equipmentRead(id);
         if (request.status == 200) {
           setPageData(JSON.parse(request.response))
         }
-      } catch (error) {
-        console.error('Ошибка при получении данных:', error);
-      }
     };
 
     fetchData();

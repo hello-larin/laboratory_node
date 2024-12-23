@@ -1,5 +1,5 @@
 // src/slices/ProcurementsSlice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../api';
 import { Procurement } from '../api/Api';
 
@@ -11,7 +11,7 @@ const initialState: ProcurementState = {
     procurement: null,
 };
 
-export const fetchProcurement = createAsyncThunk(
+export const fetchProcurement = createAsyncThunk<Procurement, string>(
   'procurements/fetchProcurement',
   async (id: string) => {
       const { request } = await api.procurements.procurementsRead(id);
@@ -29,7 +29,9 @@ const procurementsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProcurement.fulfilled, (state, action) => {
+      .addCase(fetchProcurement.fulfilled, (state, action: PayloadAction<Procurement>) => {
+        console.log("FETCH PROCUREMENT")
+        console.log(action.payload)
         state.procurement = action.payload;
       })
   },
