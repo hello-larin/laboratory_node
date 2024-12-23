@@ -15,7 +15,7 @@ export interface EquipmentResult {
 }
 
 export const getEquipmentByPrice = async (price = ''): Promise<EquipmentResult> =>{
-    return fetch(`http://192.168.100.4:3000/api/equipment/?price=${price}`)
+    return fetch(`http://192.168.15.56:3000/api/equipment/?price=${price}`)
         .then((response) => response.json())
         .catch(()=> (EQUIPMNET_MOCK))
 }
@@ -23,7 +23,7 @@ export const getEquipmentByPrice = async (price = ''): Promise<EquipmentResult> 
 export const getEquipmentById = async (
   id: number
 ): Promise<Equipment> => {
-  return fetch(`http://192.168.100.4:3000/api/equipment/${id}/`)
+  return fetch(`http://192.168.15.56:3000/api/equipment/${id}/`)
   .then((response) => response.json())
   .catch(() => (EQUIPMNET_MOCK.equipment.find(
     (eq) => eq.id === id
