@@ -29,7 +29,7 @@ const procurementsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProcurement.fulfilled, (state, action: PayloadAction<Procurement>) => {
+      .addCase(fetchProcurement.fulfilled, (state, action) => {
         console.log("FETCH PROCUREMENT")
         console.log(action.payload)
         state.procurement = action.payload;

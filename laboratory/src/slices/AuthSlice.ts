@@ -3,6 +3,29 @@ import { fetchEquipmentList, searchEquipment } from './CatalogSlice';
 import { EquipmentResponse, Register } from '../api/Api'
 import { api } from '../api';
 
+export const registerUser = createAsyncThunk<Register, { username: string, password: string }>(
+    'auth/registerUser',
+    async ({ username, password }) => {
+        const response = await api.registration.registrationCreate({ username, password });
+        if (response.request.status === 201) {
+            return JSON.parse(response.request.response);
+        } else {
+            throw new Error('Registration failed');
+        }
+
+    }
+);
+
+export const updateProfile = createAsyncThunk<Register, { password: string, last_name: string, first_name: string }>(
+    'auth/updateProfile',
+    async ({ password, last_name, first_name }) => {
+        const response = await api.user.userUpdate({ password, last_name, first_name });
+        if (response.request.status === 200) {
+            return JSON.parse(response.request.response);
+        }
+    }
+);
+
 // Thunk для логина
 export const loginUser = createAsyncThunk<Register, { username: string, password: string }>(
     'auth/loginUser',
@@ -96,6 +119,9 @@ const authSlice = createSlice({
             .addCase(searchEquipment.fulfilled, (state, action: PayloadAction<EquipmentResponse>) => {
                 state.procurement_count = action.payload.procurement_count;
                 state.procurement_id = action.payload.procurement_id;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.user = action.payload;
             })
     },
 });

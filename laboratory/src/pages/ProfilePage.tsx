@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../slices/AuthSlice';
+import { setUser, updateProfile } from '../slices/AuthSlice';
 import LabNavigation from '../components/LabNav';
 import { api } from '../api';
 import { BreadCrumbs } from '../components/BreadCrumbs';
@@ -18,16 +18,7 @@ const ProfilePage: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const { request } = await api.user.userUpdate({
-            "password": password,
-            "last_name": last_name,
-            "first_name": first_name
-        })
-        if (request.status == 200) {
-            console.log(request.response)
-            dispatch(setUser(JSON.parse(request.response)))
-            console.log(user.username)
-        }
+        dispatch(updateProfile({ password, last_name, first_name }));
     };
     return (
         <Container>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-
-import { api } from '../api';
 import LabNavigation from '../components/LabNav';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 import { ROUTE_LABELS } from '../Routes';
+import { registerUser } from '../slices/AuthSlice';
 
 const RegisterPage: React.FC = () => {
+    const dispatch = useDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [created, setCreated] = useState(false);
@@ -17,16 +17,15 @@ const RegisterPage: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const { request } = await api.registration.registrationCreate({
-            "username": username,
-            "password": password
-        })
-        if (request.status == 200) {
+        const resultAction = await dispatch(registerUser({username, password}));
+        if (registerUser.fulfilled.match(resultAction)) {
             setCreated(true);
-        } else {
-            setError(true);
+            setError(false);
         }
-        console.log(request.data);
+        if (registerUser.rejected.match(resultAction)) {
+            setError(true);
+            setCreated(false);
+        }
     };
 
     return (

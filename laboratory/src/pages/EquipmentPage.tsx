@@ -1,37 +1,33 @@
 import "../style.css";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { useParams } from "react-router-dom";
 import LabNavigation from "../components/LabNav";
-import { api } from "../api";
 import { Col, Row, Spinner, Image, Container } from "react-bootstrap";
 import default_image from "../1.png";
-import { useSelector } from "react-redux";
-import { Equipment } from "../api/Api";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEquipment } from '../slices/EquipmentSlice';
 
 export const EquipmentPage: FC = () => {
-  const [pageData, setPageData] = useState<Equipment | undefined>(undefined);
+  const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth);
-
+  const pageData = useSelector((state) => state.equipment.currentEquipment);
   const { id } = useParams(); // ид страницы, пример: "/albums/12"
+  
+  const fetchData = async (id : string) => {
+    if (id) {
+      await dispatch(fetchEquipment(id));
+    }
+  };
 
   useEffect(() => {
-    if (!id) return;
-    const fetchData = async () => {
-        const { request } = await api.equipment.equipmentRead(id);
-        if (request.status == 200) {
-          setPageData(JSON.parse(request.response))
-        }
-    };
-
-    fetchData();
-  }, [id]);
+    fetchData(id)
+  }, [id, dispatch]);
 
   return (
     <Container>
-      <LabNavigation company_name="ООО ЛабОборудование" user={user}/>
+      <LabNavigation company_name="ООО ЛабОборудование" user={user} />
       <BreadCrumbs
         crumbs={[
           { label: ROUTE_LABELS.EQUIPMENT, path: ROUTES.EQUIPMENT },
@@ -49,7 +45,7 @@ export const EquipmentPage: FC = () => {
             <p className="price">{pageData.price} P</p>
         </Col>
       </Row>
-          
+
       ) : (
         <div className="album_page_loader_block">{/* загрузка */}
           <Spinner animation="border" />
@@ -58,3 +54,5 @@ export const EquipmentPage: FC = () => {
     </Container>
   );
 };
+
+export default EquipmentPage;

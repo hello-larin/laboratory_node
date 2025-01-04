@@ -139,17 +139,17 @@ export interface Orders {
    * Created date
    * @format date-time
    */
-  created_date?: string | null;
+  created_date?: string;
   /**
    * Submited date
    * @format date-time
    */
-  submited_date?: string | null;
+  submited_date?: string;
   /**
    * Accepted date
    * @format date-time
    */
-  accepted_date?: string | null;
+  accepted_date?: string;
   /**
    * Status
    * @min -2147483648

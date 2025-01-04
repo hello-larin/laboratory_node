@@ -1,36 +1,24 @@
-// src/components/OrderPage.js
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Container} from 'react-bootstrap';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Container } from 'react-bootstrap';
 import ProcurementCard from '../components/ProcurementViewCard';
 import { useParams } from 'react-router-dom';
-import { Procurement } from '../api/Api';
-import { api } from '../api';
 import LabNavigation from '../components/LabNav';
 import { ROUTE_LABELS, ROUTES } from '../Routes';
 import { BreadCrumbs } from '../components/BreadCrumbs';
+import { fetchProcurement } from '../slices/ProcurementSlice';
 
 const OrderPage = () => {
-  const [pageData, setPageData] = useState<Procurement | undefined>(undefined);
+  const dispatch = useDispatch();
   const { id } = useParams(); // ид страницы, пример: "/albums/12"
-  const user = useSelector((state: any) => state.auth);
+  const user = useSelector((state) => state.auth);
+  const pageData = useSelector((state) => state.procurement.procurement);
 
   useEffect(() => {
-    if (!id) return;
-
-    const fetchData = async () => {
-      try {
-        const { request } = await api.procurements.procurementsRead(id);
-        if (request.status === 200) {
-          setPageData(JSON.parse(request.response));
-        }
-      } catch (error) {
-        console.error('Ошибка при получении данных:', error);
-      }
-    };
-
-    fetchData();
-  }, [id]);
+    if (id) {
+      dispatch(fetchProcurement(id));
+    }
+  }, [id, dispatch]);
 
   if (!pageData) {
     return <div>Загрузка...</div>;
